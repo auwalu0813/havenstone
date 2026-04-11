@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2E45;
+  --brass: #B5975A;
+  --brass-light: #D4B47A;
+  --warm-white: #F8F5F0;
+  --paper: #EDE9E3;
+  --ink: #1A2332;
+  --ink-muted: #5C6B7A;
+  --border: #DDD8D0;
+  --border-dark: #2A3A4E;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--warm-white);
+  color: var(--ink);
+  font-family: var(--font-body), sans-serif;
+}
+
+img {
+  display: block;
+}
+
+::selection {
+  background: rgba(181, 151, 90, 0.2);
+  color: var(--ink);
+}
