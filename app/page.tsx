@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { useState, type ReactNode } from "react";
+import PropertyCard from "@/components/PropertyCard";
+import {
+  BuildingIcon,
+  ChartIcon,
+  HandshakeIcon,
+  KeyIcon,
+  LocationPinIcon,
+  SearchIcon,
+} from "@/components/Icons";
+import { allProperties } from "@/lib/properties";
+import { sectionLabelClass } from "@/lib/utils";
 
 type SearchTab = "Buy" | "Rent" | "Sell";
-
-type Property = {
-  image: string;
-  badge: string;
-  price: string;
-  name: string;
-  location: string;
-  specs: [string, string, string];
-};
 
 type Service = {
   title: string;
@@ -25,38 +28,8 @@ type Testimonial = {
   detail: string;
 };
 
-const navLinks = ["Properties", "Services", "About", "Contact"];
 const searchTabs: SearchTab[] = ["Buy", "Rent", "Sell"];
-
-const properties: Property[] = [
-  {
-    image:
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80",
-    badge: "PREMIUM",
-    price: "₦185,000,000",
-    name: "Oceanview Terrace",
-    location: "Banana Island, Ikoyi, Lagos",
-    specs: ["5 Beds", "5 Baths", "420 sqm"],
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80",
-    badge: "NEW",
-    price: "₦95,000,000",
-    name: "The Asokoro Residence",
-    location: "Asokoro, Abuja",
-    specs: ["4 Beds", "4 Baths", "310 sqm"],
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80",
-    badge: "PREMIUM",
-    price: "₦120,000,000",
-    name: "Lekki Gardens Villa",
-    location: "Lekki Phase 1, Lagos",
-    specs: ["4 Beds", "3 Baths", "280 sqm"],
-  },
-];
+const featuredProperties = allProperties.slice(0, 3);
 
 const services: Service[] = [
   {
@@ -127,116 +100,11 @@ const processSteps = [
   },
 ];
 
-const footerLinks = {
-  Properties: ["Lagos", "Abuja", "Port Harcourt", "Luxury Homes", "New Developments"],
-  Company: ["About us", "Our Team", "Careers", "Press"],
-  Support: ["Contact us", "FAQ", "Privacy Policy", "Terms of Service"],
-};
-
-const sectionLabelClass =
-  "inline-flex items-center gap-3 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-brass";
-
 export default function Home() {
   const [activeTab, setActiveTab] = useState<SearchTab>("Buy");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 12);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const closeMenu = () => {
-      if (window.innerWidth >= 768) {
-        setMenuOpen(false);
-      }
-    };
-    window.addEventListener("resize", closeMenu);
-    return () => window.removeEventListener("resize", closeMenu);
-  }, []);
 
   return (
     <main className="bg-warm-white text-ink">
-      <header
-        className={`fixed inset-x-0 top-0 z-50 border-b border-border transition-all duration-300 ${
-          scrolled
-            ? "bg-warm-white shadow-[0_10px_30px_rgba(13,27,42,0.08)] backdrop-blur-md"
-            : "bg-warm-white"
-        }`}
-      >
-        <div className="mx-auto flex h-[60px] max-w-shell items-center justify-between px-6 md:h-[72px] md:px-10 lg:px-16">
-          <div className="w-full md:w-1/4">
-            <a
-              href="#"
-              className="font-display text-[22px] font-semibold uppercase tracking-[0.04em] text-navy"
-            >
-              HAVENSTONE
-            </a>
-          </div>
-
-          <nav className="hidden md:flex md:flex-1 md:items-center md:justify-center md:gap-9">
-            {navLinks.map((link) => (
-              <a
-                key={link}
-                href="#"
-                className="font-sans text-[13px] font-normal uppercase tracking-[0.06em] text-ink-muted transition-colors hover:text-navy"
-              >
-                {link}
-              </a>
-            ))}
-          </nav>
-
-          <div className="hidden md:flex md:w-1/4 md:items-center md:justify-end md:gap-6">
-            <p className="font-sans text-[13px] font-normal text-ink-muted">
-              +234 901 234 5678
-            </p>
-            <a
-              href="#"
-              className="inline-flex items-center justify-center bg-navy px-6 py-2.5 font-sans text-[12px] font-medium uppercase tracking-[0.08em] text-warm-white transition-colors hover:bg-navy-mid"
-            >
-              List Your Property
-            </a>
-          </div>
-
-          <button
-            type="button"
-            className="inline-flex h-10 w-10 items-center justify-center text-navy md:hidden"
-            aria-label="Toggle navigation"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <HamburgerIcon className="h-5 w-5" />
-          </button>
-        </div>
-
-        {menuOpen && (
-          <div className="border-t border-border bg-warm-white px-6 py-6 md:hidden">
-            <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link}
-                  href="#"
-                  className="font-sans text-[13px] font-normal uppercase tracking-[0.06em] text-ink-muted"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link}
-                </a>
-              ))}
-              <p className="pt-2 font-sans text-[13px] text-ink-muted">+234 901 234 5678</p>
-              <a
-                href="#"
-                className="mt-2 inline-flex items-center justify-center bg-navy px-6 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.08em] text-warm-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                List Your Property
-              </a>
-            </div>
-          </div>
-        )}
-      </header>
-
       <section className="relative flex min-h-screen items-end overflow-hidden bg-paper">
         <img
           src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=80"
@@ -257,9 +125,9 @@ export default function Home() {
               <span className="block text-brass">life begins.</span>
             </h1>
             <p className="mt-6 max-w-[580px] font-sans text-[16px] leading-[1.7] text-[#8BA0B2] md:text-[18px]">
-              Premium properties across Lagos, Abuja and Port Harcourt. Expert
-              guidance from search to settlement — whether it&apos;s your first home or
-              your finest investment.
+              Premium properties across Lagos, Abuja and Port Harcourt. Expert guidance
+              from search to settlement — whether it&apos;s your first home or your finest
+              investment.
             </p>
           </div>
 
@@ -349,58 +217,17 @@ export default function Home() {
                 Premium Properties
               </h2>
             </div>
-            <a
-              href="#"
+            <Link
+              href="/properties"
               className="font-sans text-[13px] text-ink-muted transition-colors hover:text-navy"
             >
               View all listings →
-            </a>
+            </Link>
           </div>
 
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {properties.map((property) => (
-              <article
-                key={property.name}
-                className="overflow-hidden rounded-[4px] border border-border bg-white"
-              >
-                <div className="group relative aspect-[16/10] overflow-hidden bg-paper">
-                  <img
-                    src={property.image}
-                    alt={property.name}
-                    className="h-full w-full rounded-[8px] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                  <span className="absolute left-3 top-3 inline-flex bg-brass px-3 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.1em] text-white">
-                    {property.badge}
-                  </span>
-                  <button
-                    type="button"
-                    aria-label={`Save ${property.name}`}
-                    className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink-muted shadow-md transition-colors hover:text-brass"
-                  >
-                    <HeartIcon className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="p-6">
-                  <p className="font-display text-[26px] font-semibold text-navy">
-                    {property.price}
-                  </p>
-                  <h3 className="mt-2 font-sans text-[18px] font-medium text-ink">
-                    {property.name}
-                  </h3>
-                  <p className="mt-1 flex items-center gap-2 font-sans text-[14px] text-ink-muted">
-                    <LocationPinIcon className="h-4 w-4 flex-none" />
-                    <span>{property.location}</span>
-                  </p>
-                  <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4 font-sans text-[13px] text-ink-muted">
-                    {property.specs.map((spec, index) => (
-                      <span key={spec} className="inline-flex items-center gap-2">
-                        {index > 0 && <span className="text-border-dark/40">·</span>}
-                        {spec}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </article>
+            {featuredProperties.map((property) => (
+              <PropertyCard key={property.slug} property={property} />
             ))}
           </div>
         </div>
@@ -427,12 +254,12 @@ export default function Home() {
                 <p className="mt-3 font-sans text-[15px] leading-[1.7] text-ink-muted">
                   {service.description}
                 </p>
-                <a
-                  href="#"
+                <Link
+                  href="/services"
                   className="mt-5 inline-flex font-sans text-[13px] font-medium text-brass transition-all hover:underline"
                 >
                   Learn more →
-                </a>
+                </Link>
               </article>
             ))}
           </div>
@@ -451,9 +278,7 @@ export default function Home() {
               key={label}
               className={`text-center lg:px-5 ${index > 0 ? "lg:border-l lg:border-border-dark" : ""}`}
             >
-              <p className="font-display text-[40px] font-semibold text-warm-white">
-                {value}
-              </p>
+              <p className="font-display text-[40px] font-semibold text-warm-white">{value}</p>
               <p className="mt-1 font-sans text-[14px] text-[#8BA0B2]">{label}</p>
               <p className="mt-1 font-sans text-[12px] text-ink-muted">{sublabel}</p>
             </div>
@@ -472,9 +297,7 @@ export default function Home() {
               {processSteps.map((step, index) => (
                 <div
                   key={step.number}
-                  className={`mb-10 border-l-2 pl-8 ${
-                    index === 0 ? "border-brass" : "border-border"
-                  }`}
+                  className={`mb-10 border-l-2 pl-8 ${index === 0 ? "border-brass" : "border-border"}`}
                 >
                   <p className="font-sans text-[12px] font-medium uppercase tracking-[0.1em] text-brass">
                     {step.number}
@@ -497,12 +320,8 @@ export default function Home() {
                 alt="Emeka Okafor"
                 className="h-20 w-20 rounded-full border-[3px] border-brass object-cover"
               />
-              <h3 className="mt-4 font-sans text-[18px] font-medium text-ink">
-                Emeka Okafor
-              </h3>
-              <p className="mt-1 font-sans text-[14px] text-ink-muted">
-                Senior Property Advisor
-              </p>
+              <h3 className="mt-4 font-sans text-[18px] font-medium text-ink">Emeka Okafor</h3>
+              <p className="mt-1 font-sans text-[14px] text-ink-muted">Senior Property Advisor</p>
               <p className="mt-3 flex items-center gap-2 font-sans text-[14px] text-ink">
                 <span className="font-medium">4.9</span>
                 <span className="text-brass">★</span>
@@ -512,12 +331,12 @@ export default function Home() {
               <p className="font-sans text-[13px] text-ink-muted">
                 12 years experience · 350+ properties sold
               </p>
-              <button
-                type="button"
-                className="mt-6 w-full bg-navy px-6 py-[14px] font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-warm-white transition-colors hover:bg-navy-mid"
+              <Link
+                href="/contact"
+                className="mt-6 inline-flex w-full items-center justify-center bg-navy px-6 py-[14px] font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-warm-white transition-colors hover:bg-navy-mid"
               >
                 Book free consultation
-              </button>
+              </Link>
               <p className="mt-3 text-center font-sans text-[12px] italic text-ink-muted">
                 No obligation. No fees until you find your home.
               </p>
@@ -575,215 +394,27 @@ export default function Home() {
                 <span className="block text-brass">is closer than you think.</span>
               </h2>
               <p className="mx-auto mt-4 max-w-[560px] font-sans text-[16px] leading-[1.7] text-[#8BA0B2]">
-                Whether buying, selling or investing — our team is ready to guide
-                you home.
+                Whether buying, selling or investing — our team is ready to guide you
+                home.
               </p>
               <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-                <a
-                  href="#"
+                <Link
+                  href="/properties"
                   className="inline-flex items-center justify-center bg-brass px-8 py-[14px] font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-navy transition-colors hover:bg-brass-light"
                 >
                   Browse Properties
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href="/contact"
                   className="inline-flex items-center justify-center border border-border-dark px-8 py-[14px] font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-warm-white transition-colors hover:bg-navy-mid"
                 >
                   Speak to an Advisor
-                </a>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      <footer className="border-t-[4px] border-brass bg-navy px-6 py-12 md:px-10 lg:px-16 lg:py-16">
-        <div className="mx-auto max-w-shell">
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
-            <div>
-              <a
-                href="#"
-                className="font-display text-[20px] font-semibold uppercase tracking-[0.04em] text-warm-white"
-              >
-                HAVENSTONE
-              </a>
-              <p className="mt-3 whitespace-pre-line font-sans text-[14px] leading-[1.6] text-[#8BA0B2]">
-                {"Premium Nigerian real estate.\nBuying. Selling. Investing."}
-              </p>
-              <p className="mt-4 whitespace-pre-line font-sans text-[13px] leading-[1.7] text-ink-muted">
-                {"14 Bourdillon Road, Ikoyi\nLagos, Nigeria"}
-              </p>
-            </div>
-
-            {Object.entries(footerLinks).map(([title, links]) => (
-              <div key={title}>
-                <p className="mb-4 font-sans text-[11px] font-medium uppercase tracking-[0.1em] text-warm-white">
-                  {title}
-                </p>
-                <div className="flex flex-col gap-2">
-                  {links.map((link) => (
-                    <a
-                      key={link}
-                      href="#"
-                      className="font-sans text-[14px] leading-[2.4] text-[#8BA0B2] transition-colors hover:text-warm-white"
-                    >
-                      {link}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 flex flex-col gap-4 border-t border-border-dark pt-6 text-center md:flex-row md:items-center md:justify-between md:text-left">
-            <p className="font-sans text-[13px] text-ink-muted">
-              © 2026 Havenstone Properties Ltd. All rights reserved.
-            </p>
-            <div className="flex items-center justify-center gap-4 md:justify-end">
-              {[
-                { label: "Twitter", icon: <TwitterXIcon className="h-[18px] w-[18px]" /> },
-                { label: "Instagram", icon: <InstagramIcon className="h-[18px] w-[18px]" /> },
-                { label: "LinkedIn", icon: <LinkedInIcon className="h-[18px] w-[18px]" /> },
-                { label: "Facebook", icon: <FacebookIcon className="h-[18px] w-[18px]" /> },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href="#"
-                  aria-label={social.label}
-                  className="text-ink-muted transition-colors hover:text-warm-white"
-                >
-                  {social.icon}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
     </main>
-  );
-}
-
-function HamburgerIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path d="M4 7H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M8 17H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function LocationPinIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path
-        d="M12 21C15.5 17.1 18 14.1 18 10.8C18 7.04 15.31 4 12 4C8.69 4 6 7.04 6 10.8C6 14.1 8.5 17.1 12 21Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <circle cx="12" cy="10.5" r="2.2" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
-function HeartIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path
-        d="M12 20.5L10.7 19.33C5.8 14.94 3 12.41 3 9.3C3 6.77 5.04 4.8 7.58 4.8C9 4.8 10.36 5.46 11.2 6.5C12.04 5.46 13.4 4.8 14.82 4.8C17.36 4.8 19.4 6.77 19.4 9.3C19.4 12.41 16.6 14.94 11.7 19.33L12 20.5Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M16 16L20 20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function KeyIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
-      <circle cx="16" cy="24" r="7" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M23 24H40V19H35V14H30V19H23" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function HandshakeIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
-      <path d="M8 17L16 10L24 17L16 24L8 17Z" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M24 17L32 10L40 17L32 24L24 17Z" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M16 24L20.5 28.5C22.2 30.2 25 30.2 26.7 28.5L32 23.2M20 20L23 23C24.7 24.7 27.5 24.7 29.2 23L32 20"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path d="M12 28L18 34M36 28L30 34" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function BuildingIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
-      <path d="M10 38V14L24 8L38 14V38" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M18 38V28H30V38" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M18 18H18.01M24 18H24.01M30 18H30.01M18 23H18.01M24 23H24.01M30 23H30.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ChartIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
-      <path d="M8 38H40" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M14 33V24M24 33V16M34 33V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M12 18L20 11L27 16L36 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function TwitterXIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path d="M4 4L20 20M20 4L4 20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function InstagramIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="17" cy="7" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function LinkedInIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path d="M7 10V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M12 19V13.5C12 11.84 13.34 10.5 15 10.5C16.66 10.5 18 11.84 18 13.5V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <circle cx="7" cy="6.5" r="1.5" fill="currentColor" />
-    </svg>
-  );
-}
-
-function FacebookIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path d="M13.5 20V12H16.5L17 9H13.5V7.2C13.5 6.33 13.86 6 14.73 6H17V3H14.1C11.38 3 10.5 4.19 10.5 6.45V9H8V12H10.5V20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
